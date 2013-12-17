@@ -102,7 +102,8 @@
 {
 	UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:1];
 	if (!imageView) {
-		imageView = [[UIImageView alloc] initWithFrame:CGRectMake(115, 35, 90, 90)];imageView.contentMode = UIViewContentModeScaleAspectFit;
+		imageView = [[UIImageView alloc] initWithFrame:CGRectMake(115, 35, 90, 90)];
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
 		imageView.tag = 1;
 		
 		[cell.contentView addSubview:imageView];
