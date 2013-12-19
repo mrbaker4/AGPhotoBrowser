@@ -325,6 +325,12 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 	
 	int index = floor(targetContentOffset.y / /*CGRectGetWidth(tableView.frame))*/tableView.rowHeight);
 	
+    if ([self.dataSource respondsToSelector:@selector(photoBrowser:willDisplayActionButtonAtIndex:)]) {
+        self.overlayView.actionButton.hidden = [self.dataSource photoBrowser:self willDisplayActionButtonAtIndex:index];
+    } else {
+        self.overlayView.actionButton.hidden = NO;
+    }
+    
 	[self setupPhotoForIndex:index];
 }
 
@@ -360,10 +366,6 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
     self.currentWindow.backgroundColor = [UIColor redColor];
     [self.currentWindow makeKeyAndVisible];
     [self.currentWindow addSubview:self];
-    
-    if ([self.dataSource respondsToSelector:@selector(canDisplayActionButtonInPhotoBrowser:)]) {
-        self.overlayView.actionButton.hidden = ![self.dataSource canDisplayActionButtonInPhotoBrowser:self];
-    }
 	
 	[UIView animateWithDuration:AGPhotoBrowserAnimationDuration
 					 animations:^(){

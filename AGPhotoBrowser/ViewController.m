@@ -145,6 +145,16 @@
 	return [[_samplePictures objectAtIndex:index] objectForKey:@"Description"];
 }
 
+- (BOOL)photoBrowser:(AGPhotoBrowserView *)photoBrowser willDisplayActionButtonAtIndex:(NSInteger)index
+{
+    // -- For testing purposes only
+    if (index % 2) {
+        return YES;
+    }
+    
+    return NO;
+}
+
 
 #pragma mark - AGPhotoBrowser delegate
 

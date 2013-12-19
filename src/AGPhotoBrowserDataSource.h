@@ -17,6 +17,6 @@
 
 - (NSString *)photoBrowser:(AGPhotoBrowserView *)photoBrowser titleForImageAtIndex:(NSInteger)index;
 - (NSString *)photoBrowser:(AGPhotoBrowserView *)photoBrowser descriptionForImageAtIndex:(NSInteger)index;
-- (BOOL)canDisplayActionButtonInPhotoBrowser:(AGPhotoBrowserView *)photoBrowser;
+- (BOOL)photoBrowser:(AGPhotoBrowserView *)photoBrowser willDisplayActionButtonAtIndex:(NSInteger)index;
 
 @end
