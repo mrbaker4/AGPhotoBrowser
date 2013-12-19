@@ -15,8 +15,12 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.delegate = self;
+        self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
+        self.backgroundColor = [UIColor yellowColor];
         self.imageView = [[UIImageView alloc] initWithFrame:frame];
         self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+        self.imageView.backgroundColor = [UIColor purpleColor];
+
         self.frame = frame;
         
         self.minimumZoomScale = 1.0f;
@@ -35,6 +39,11 @@
 - (void)setImage:(UIImage *)image
 {
     self.imageView.image = image;
+    
+    NSLog(@"Cell %@", NSStringFromCGRect(self.superview.frame));
+    NSLog(@"Cell transform %@, current transform %@", NSStringFromCGAffineTransform(self.superview.transform), NSStringFromCGAffineTransform(self.transform));
+    NSLog(@"Scrollview %@", NSStringFromCGRect(self.frame));
+    NSLog(@"Imageview %@", NSStringFromCGRect(self.imageView.frame));
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
