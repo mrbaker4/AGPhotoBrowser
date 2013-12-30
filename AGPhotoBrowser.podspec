@@ -10,5 +10,5 @@ Pod::Spec.new do |s|
   s.license      = { :type => 'Apache', :file => 'LICENSE.md' }
   s.source_files = 'src/*.{h,m}'
   s.requires_arc = true
-  s.dependecy 'SDWebImage'
+  s.dependency 'SDWebImage'
 end
