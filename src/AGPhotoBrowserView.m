@@ -11,7 +11,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "AGPhotoBrowserOverlayView.h"
 #import "AGPhotoBrowserZoomableView.h"
-
+#import <SDWebImage/UIImageView+WebCache.h>
 
 @interface AGPhotoBrowserView () <
 AGPhotoBrowserOverlayViewDelegate,
@@ -57,7 +57,7 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 	self.userInteractionEnabled = NO;
 	self.backgroundColor = [UIColor colorWithWhite:0. alpha:0.];
 	_currentlySelectedIndex = NSNotFound;
-	
+
 	[self addSubview:self.photoTableView];
 	[self addSubview:self.doneButton];
 	[self addSubview:self.overlayView];
@@ -74,12 +74,12 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
 	NSInteger number = [_dataSource numberOfPhotosForPhotoBrowser:self];
-    
+
     if (number > 0 && _currentlySelectedIndex == NSNotFound) {
         // initialize with info for the first photo in photoTable
         [self setupPhotoForIndex:0];
     }
-    
+
     return number;
 }
 
@@ -95,9 +95,9 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
-    
+
     [self configureCell:cell forRowAtIndexPath:indexPath];
-    
+
     return cell;
 }
 
@@ -108,30 +108,34 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 		imageView = [[AGPhotoBrowserZoomableView alloc] initWithFrame:self.bounds];
 		imageView.userInteractionEnabled = YES;
         imageView.zoomableDelegate = self;
-		
+
 		UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(p_imageViewPanned:)];
 		panGesture.delegate = self;
 		panGesture.maximumNumberOfTouches = 1;
 		panGesture.minimumNumberOfTouches = 1;
 		[imageView addGestureRecognizer:panGesture];
 		imageView.tag = 1;
-        
+
 		CGAffineTransform transform = CGAffineTransformMakeRotation(M_PI_2);
 		CGPoint origin = imageView.frame.origin;
 		imageView.transform = transform;
         CGRect frame = imageView.frame;
         frame.origin = origin;
         imageView.frame = frame;
-		
+
 		[cell.contentView addSubview:imageView];
 	}
     else {
         // reset to 'zoom out' state
         [imageView setZoomScale:1.0f];
     }
-	
-    [imageView setImage:[_dataSource photoBrowser:self imageAtIndex:indexPath.row]];
 
+    if ([_dataSource respondsToSelector:@selector(photoBrowser:URLForImageAtIndex:)]) {
+        [imageView setImageWithURL:[_dataSource photoBrowser:self URLForImageAtIndex:indexPath.row]];
+    }
+    else if ([_dataSource respondsToSelector:@selector(photoBrowser:imageAtIndex:)]) {
+        [imageView setImage:[_dataSource photoBrowser:self imageAtIndex:indexPath.row]];
+    }
 }
 
 
@@ -153,9 +157,9 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
 	[self.overlayView resetOverlayView];
-	
+
 	CGPoint targetContentOffset = scrollView.contentOffset;
-    
+
 	UITableView *tv = (UITableView*)scrollView;
 	NSIndexPath *indexPathOfTopRowAfterScrolling = [tv indexPathForRowAtPoint:
 													targetContentOffset
@@ -164,28 +168,28 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 										  indexPathOfTopRowAfterScrolling
 										  ];
 	targetContentOffset.y = rectForTopRowAfterScrolling.origin.y;
-	
+
 	int index = floor(targetContentOffset.y / CGRectGetWidth(self.frame));
-	
+
     if ([self.dataSource respondsToSelector:@selector(photoBrowser:willDisplayActionButtonAtIndex:)]) {
         self.overlayView.actionButton.hidden = [self.dataSource photoBrowser:self willDisplayActionButtonAtIndex:index];
     } else {
         self.overlayView.actionButton.hidden = NO;
     }
-    
+
 	[self setupPhotoForIndex:index];
 }
 
 - (void)setupPhotoForIndex:(int)index
 {
     _currentlySelectedIndex = index;
-	
+
 	if ([_dataSource respondsToSelector:@selector(photoBrowser:titleForImageAtIndex:)]) {
 		self.overlayView.title = [_dataSource photoBrowser:self titleForImageAtIndex:index];
 	} else {
         self.overlayView.title = @"";
     }
-	
+
 	if ([_dataSource respondsToSelector:@selector(photoBrowser:descriptionForImageAtIndex:)]) {
 		self.overlayView.description = [_dataSource photoBrowser:self descriptionForImageAtIndex:index];
 	} else {
@@ -199,11 +203,11 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 - (void)show
 {
     [[[UIApplication sharedApplication].windows lastObject] addSubview:self];
-	
+
 	[UIView animateWithDuration:AGPhotoBrowserAnimationDuration
 					 animations:^(){
 						 self.backgroundColor = [UIColor colorWithWhite:0. alpha:1.];
-						 
+
 						 [[UIApplication sharedApplication] setStatusBarHidden:YES];
 					 }
 					 completion:^(BOOL finished){
@@ -221,7 +225,7 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 	if (initialIndex < [_dataSource numberOfPhotosForPhotoBrowser:self]) {
 		[self.photoTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:initialIndex inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
 	}
-	
+
 	[self show];
 }
 
@@ -231,7 +235,7 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 					 animations:^(){
 						 self.photoTableView.alpha = 0.;
 						 self.backgroundColor = [UIColor colorWithWhite:0. alpha:0.];
-						 
+
 						 [[UIApplication sharedApplication] setStatusBarHidden:NO];
 					 }
 					 completion:^(BOOL finished){
@@ -265,10 +269,10 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 																			   context:nil];
 		descriptionSize = CGSizeMake(ceil(CGRectGetWidth(descriptionBoundingRect)), ceil(CGRectGetHeight(descriptionBoundingRect)));
 	}
-	
+
 	CGRect currentOverlayFrame = self.overlayView.frame;
 	int newSharingHeight = CGRectGetHeight(currentOverlayFrame) -20 + ceil(descriptionSize.height);
-	
+
 	[UIView animateWithDuration:AGPhotoBrowserAnimationDuration
 					 animations:^(){
 						 self.overlayView.frame = CGRectMake(0, floor(CGRectGetHeight(self.frame) - newSharingHeight), CGRectGetWidth(self.frame), newSharingHeight);
@@ -282,12 +286,12 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 {
     UIView *imageView = [gestureRecognizer view];
     CGPoint translation = [gestureRecognizer translationInView:[imageView superview]];
-	
+
     // -- Check for horizontal gesture
     if (fabsf(translation.x) > fabsf(translation.y)) {
         return YES;
 	}
-	
+
     return NO;
 }
 
@@ -297,7 +301,7 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 - (void)p_imageViewPanned:(UIPanGestureRecognizer *)recognizer
 {
 	AGPhotoBrowserZoomableView *imageView = (AGPhotoBrowserZoomableView *)recognizer.view;
-	
+
 	if (recognizer.state == UIGestureRecognizerStateBegan) {
         // -- Show back status bar
         [[UIApplication sharedApplication] setStatusBarHidden:NO];
@@ -308,7 +312,7 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 		_startingPanPoint = imageView.center;
 		return;
 	}
-	
+
 	if (recognizer.state == UIGestureRecognizerStateEnded) {
 		// -- Enable table view scrolling
 		self.photoTableView.scrollEnabled = YES;
@@ -316,9 +320,9 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 		CGPoint endingPanPoint = [recognizer translationInView:self];
 		CGPoint translatedPoint = CGPointMake(_startingPanPoint.x - endingPanPoint.y, _startingPanPoint.y);
 		int heightDifference = abs(floor(_startingPanPoint.x - translatedPoint.x));
-		
+
 		if (heightDifference <= AGPhotoBrowserThresholdToCenter) {
-            
+
 			// -- Back to original center
 			[UIView animateWithDuration:AGPhotoBrowserAnimationDuration
 							 animations:^(){
@@ -356,9 +360,9 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 - (void)setDisplayingDetailedView:(BOOL)displayingDetailedView
 {
 	_displayingDetailedView = displayingDetailedView;
-	
+
 	CGFloat newAlpha;
-	
+
 	if (_displayingDetailedView) {
 		[self.overlayView showOverlayAnimated:YES];
 		newAlpha = 1.;
@@ -366,7 +370,7 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 		[self.overlayView hideOverlayAnimated:YES];
 		newAlpha = 0.;
 	}
-	
+
 	[UIView animateWithDuration:AGPhotoBrowserAnimationDuration
 					 animations:^(){
 						 self.doneButton.alpha = newAlpha;
@@ -390,10 +394,10 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 		[_doneButton setTitleColor:[UIColor colorWithWhite:0.9 alpha:0.9] forState:UIControlStateHighlighted];
 		[_doneButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0f]];
 		_doneButton.alpha = 0.;
-		
+
 		[_doneButton addTarget:self action:@selector(p_doneButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 	}
-	
+
 	return _doneButton;
 }
 
@@ -411,7 +415,7 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 		_photoTableView.showsVerticalScrollIndicator = NO;
 		_photoTableView.showsHorizontalScrollIndicator = NO;
 		_photoTableView.alpha = 0.;
-		
+
 		// -- Rotate table horizontally
 		CGAffineTransform rotateTable = CGAffineTransformMakeRotation(-M_PI_2);
 		CGPoint origin = _photoTableView.frame.origin;
@@ -420,7 +424,7 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 		frame.origin = origin;
 		_photoTableView.frame = frame;
 	}
-	
+
 	return _photoTableView;
 }
 
@@ -430,7 +434,7 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 		_overlayView = [[AGPhotoBrowserOverlayView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.frame) - AGPhotoBrowserOverlayInitialHeight, CGRectGetWidth(self.frame), AGPhotoBrowserOverlayInitialHeight)];
 		_overlayView.delegate = self;
 	}
-	
+
 	return _overlayView;
 }
 

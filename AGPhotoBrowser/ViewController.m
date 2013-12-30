@@ -11,9 +11,9 @@
 #import "AGPhotoBrowserView.h"
 
 
-#define SAMPLE_IMAGE_1			[UIImage imageNamed:@"sample1.jpg"]
-#define SAMPLE_IMAGE_2			[UIImage imageNamed:@"sample2.jpg"]
-#define SAMPLE_IMAGE_3			[UIImage imageNamed:@"sample3.jpg"]
+#define SAMPLE_IMAGE_1			[NSURL URLWithString:@"http://upload.wikimedia.org/wikipedia/commons/b/b9/Steve_Jobs_Headshot_2010-CROP.jpg"]
+#define SAMPLE_IMAGE_2			[NSURL URLWithString:@"http://static3.businessinsider.com/image/520a2c4d69beddde2e00000c/larry-ellison-describes-watching-his-close-friend-steve-jobs-die.jpg"]
+#define SAMPLE_IMAGE_3			[NSURL URLWithString:@"http://s3.amazonaws.com/crunchbase_prod_assets/assets/images/resized/0001/0974/10974v7-max-250x250.jpg"]
 
 
 @interface ViewController () <UITableViewDataSource, UITableViewDelegate, AGPhotoBrowserDelegate, AGPhotoBrowserDataSource> {
@@ -31,7 +31,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-		
+
 	_samplePictures = @[
 	@{
 		  @"Image": SAMPLE_IMAGE_1,
@@ -75,16 +75,16 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *cellIdentifier = @"SampleControllerCell";
-    
+
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    
+
     if(cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
-	
+
 	[self configureCell:cell forRowAtIndexPath:indexPath];
-    
+
     return cell;
 }
 
@@ -104,21 +104,21 @@
 	if (!imageView) {
 		imageView = [[UIImageView alloc] initWithFrame:CGRectMake(115, 35, 90, 90)];imageView.contentMode = UIViewContentModeScaleAspectFit;
 		imageView.tag = 1;
-		
+
 		[cell.contentView addSubview:imageView];
 	}
-	
+
 	UILabel *titleLabel = (UILabel *)[cell.contentView viewWithTag:2];
 	if (!titleLabel) {
 		titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 15, 280, 15)];
 		titleLabel.font = [UIFont boldSystemFontOfSize:17];
 		titleLabel.textAlignment = NSTextAlignmentCenter;
-		
+
 		[cell.contentView addSubview:titleLabel];
 	}
-	
+
 	titleLabel.text = [self photoBrowser:self.browserView titleForImageAtIndex:indexPath.row];
-	imageView.image = [self photoBrowser:self.browserView imageAtIndex:indexPath.row];
+	//imageView.image = [self photoBrowser:self.browserView imageAtIndex:indexPath.row];
 }
 
 
@@ -129,9 +129,8 @@
 	return _samplePictures.count;
 }
 
-- (UIImage *)photoBrowser:(AGPhotoBrowserView *)photoBrowser imageAtIndex:(NSInteger)index
-{
-	return [[_samplePictures objectAtIndex:index] objectForKey:@"Image"];
+- (NSURL *)photoBrowser:(AGPhotoBrowserView *)photoBrowser URLForImageAtIndex:(NSInteger)index {
+    return [[_samplePictures objectAtIndex:index] objectForKey:@"Image"];
 }
 
 - (NSString *)photoBrowser:(AGPhotoBrowserView *)photoBrowser titleForImageAtIndex:(NSInteger)index
@@ -150,7 +149,7 @@
     if (index % 2) {
         return YES;
     }
-    
+
     return NO;
 }
 
@@ -187,7 +186,7 @@
 		_browserView.delegate = self;
 		_browserView.dataSource = self;
 	}
-	
+
 	return _browserView;
 }
 

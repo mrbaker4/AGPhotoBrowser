@@ -21,5 +21,6 @@
 @property (nonatomic, weak) id<AGPhotoBrowserZoomableViewDelegate> zoomableDelegate;
 @property (nonatomic, strong) UIImageView *imageView;
 - (void)setImage:(UIImage *)image;
+- (void)setImageWithURL:(NSURL *)url;
 
 @end

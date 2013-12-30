@@ -7,6 +7,7 @@
 //
 
 #import "AGPhotoBrowserZoomableView.h"
+#import <SDWebImage/UIImageView+WebCache.h>
 
 @implementation AGPhotoBrowserZoomableView
 
@@ -18,15 +19,15 @@
         self.imageView = [[UIImageView alloc] initWithFrame:frame];
         self.imageView.contentMode = UIViewContentModeScaleAspectFit;
         self.frame = frame;
-        
+
         self.minimumZoomScale = 1.0f;
         self.maximumZoomScale = 5.0f;
-        
+
         UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                                     action:@selector(doubleTapped:)];
         doubleTap.numberOfTapsRequired = 2;
         [self addGestureRecognizer:doubleTap];
-        
+
         [self addSubview:self.imageView];
     }
     return self;
@@ -35,6 +36,12 @@
 - (void)setImage:(UIImage *)image
 {
     self.imageView.image = image;
+}
+
+- (void)setImageWithURL:(NSURL *)url {
+    [self.imageView setImageWithURL:url
+                   placeholderImage:nil
+                            options:SDWebImageProgressiveDownload];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event

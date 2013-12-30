@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8D3D8ABC184202DE00154B6B /* AGPhotoBrowserZoomableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3D8ABB184202DE00154B6B /* AGPhotoBrowserZoomableView.m */; };
+		CBC5EBE3B0134ADC8EB17C73 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B96E339761214CE8968AB2EC /* libPods.a */; };
 		DE2A3D7A17A575C700CE0CA5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE2A3D7917A575C700CE0CA5 /* UIKit.framework */; };
 		DE2A3D7C17A575C700CE0CA5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE2A3D7B17A575C700CE0CA5 /* Foundation.framework */; };
 		DE2A3D7E17A575C700CE0CA5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE2A3D7D17A575C700CE0CA5 /* CoreGraphics.framework */; };
@@ -46,6 +47,8 @@
 /* Begin PBXFileReference section */
 		8D3D8ABA184202DE00154B6B /* AGPhotoBrowserZoomableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGPhotoBrowserZoomableView.h; sourceTree = "<group>"; };
 		8D3D8ABB184202DE00154B6B /* AGPhotoBrowserZoomableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPhotoBrowserZoomableView.m; sourceTree = "<group>"; };
+		B1CE6266E2F74C51BF33D804 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		B96E339761214CE8968AB2EC /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE2A3D7617A575C700CE0CA5 /* AGPhotoBrowser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AGPhotoBrowser.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE2A3D7917A575C700CE0CA5 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		DE2A3D7B17A575C700CE0CA5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -91,6 +94,7 @@
 				DE2A3D7C17A575C700CE0CA5 /* Foundation.framework in Frameworks */,
 				DE2A3D7E17A575C700CE0CA5 /* CoreGraphics.framework in Frameworks */,
 				KIYDQKWBMRKIEYEVRWSLKUDQ /* libz.dylib in Frameworks */,
+				CBC5EBE3B0134ADC8EB17C73 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -114,6 +118,7 @@
 				DE2A3DA317A575C700CE0CA5 /* AGPhotoBrowserTests */,
 				DE2A3D7817A575C700CE0CA5 /* Frameworks */,
 				DE2A3D7717A575C700CE0CA5 /* Products */,
+				B1CE6266E2F74C51BF33D804 /* Pods.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -135,6 +140,7 @@
 				DE2A3D7D17A575C700CE0CA5 /* CoreGraphics.framework */,
 				DE2A3D9D17A575C700CE0CA5 /* SenTestingKit.framework */,
 				HYXIFWTDXJPPRRMDCEPMDTJH /* libz.dylib */,
+				B96E339761214CE8968AB2EC /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -227,9 +233,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DE2A3DAE17A575C700CE0CA5 /* Build configuration list for PBXNativeTarget "AGPhotoBrowser" */;
 			buildPhases = (
+				ADB6178B34BE4C509BFC907C /* Check Pods Manifest.lock */,
 				DE2A3D7217A575C700CE0CA5 /* Sources */,
 				DE2A3D7317A575C700CE0CA5 /* Frameworks */,
 				DE2A3D7417A575C700CE0CA5 /* Resources */,
+				F0884C74442C419A9D2DE4D7 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -313,6 +321,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		ADB6178B34BE4C509BFC907C /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
 		DE2A3D9A17A575C700CE0CA5 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -325,6 +348,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+		F0884C74442C419A9D2DE4D7 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -452,13 +490,14 @@
 		};
 		DE2A3DAF17A575C700CE0CA5 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B1CE6266E2F74C51BF33D804 /* Pods.xcconfig */;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AGPhotoBrowser/AGPhotoBrowser-Prefix.pch";
 				INFOPLIST_FILE = "AGPhotoBrowser/AGPhotoBrowser-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -466,6 +505,7 @@
 		};
 		DE2A3DB017A575C700CE0CA5 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B1CE6266E2F74C51BF33D804 /* Pods.xcconfig */;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AGPhotoBrowser/AGPhotoBrowser-Prefix.pch";
