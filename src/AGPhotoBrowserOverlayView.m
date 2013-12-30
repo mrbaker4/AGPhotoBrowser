@@ -45,12 +45,12 @@
 - (void)layoutSubviews
 {
 	[super layoutSubviews];
-	
+
 	_gradientLayer.frame = self.bounds;
-	
+
 	self.titleLabel.frame = CGRectMake(20, 35, CGRectGetWidth(self.frame) - 40, 20);
 	self.separatorView.frame = CGRectMake(20, CGRectGetMinY(self.titleLabel.frame) + CGRectGetHeight(self.titleLabel.frame), CGRectGetWidth(self.titleLabel.frame), 1);
-    
+
 	if (self.descriptionExpanded) {
 		CGSize descriptionSize;
 		if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1) {
@@ -67,7 +67,7 @@
 		self.descriptionLabel.frame = CGRectMake(20, CGRectGetMinY(self.separatorView.frame) + CGRectGetHeight(self.separatorView.frame) + 10, 220, 20);
 		self.seeMoreButton.frame = CGRectMake(240, CGRectGetMinY(self.separatorView.frame) + CGRectGetHeight(self.separatorView.frame) + 10, 65, 20);
 	}
-    
+
 	if ([self.descriptionLabel.text length]) {
 		CGSize descriptionSize;
 		if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1) {
@@ -89,7 +89,7 @@
         self.descriptionLabel.hidden = YES;
         self.seeMoreButton.hidden = YES;
     }
-	
+
     if ([_title length]) {
 		self.titleLabel.hidden = NO;
 		self.separatorView.hidden = NO;
@@ -97,7 +97,7 @@
 		self.titleLabel.hidden = YES;
 		self.separatorView.hidden = YES;
 	}
-	
+
 	self.actionButton.frame = CGRectMake(CGRectGetWidth(self.sharingView.frame) - 55 - 10, CGRectGetHeight(self.sharingView.frame) - 32 - 5, 55, 32);
 }
 
@@ -105,13 +105,13 @@
 {
 	self.alpha = 0;
 	self.userInteractionEnabled = YES;
-    
+
 	[self.sharingView addSubview:self.titleLabel];
 	[self.sharingView addSubview:self.separatorView];
 	[self.sharingView addSubview:self.descriptionLabel];
 	[self.sharingView addSubview:self.seeMoreButton];
-	[self.sharingView addSubview:self.actionButton];
-	
+	//[self.sharingView addSubview:self.actionButton];
+
 	[self addSubview:self.sharingView];
 }
 
@@ -135,7 +135,7 @@
 	if (floor(CGRectGetHeight(self.frame)) != AGPhotoBrowserOverlayInitialHeight) {
 		__block CGRect initialSharingFrame = self.frame;
 		initialSharingFrame.origin.y = round(CGRectGetHeight([UIScreen mainScreen].bounds) - AGPhotoBrowserOverlayInitialHeight);
-		
+
 		[UIView animateWithDuration:0.15
 						 animations:^(){
 							 self.frame = initialSharingFrame;
@@ -185,18 +185,18 @@
 - (void)setFrame:(CGRect)frame
 {
 	[super setFrame:frame];
-	
+
 	self.sharingView.frame = CGRectMake(0, 0, CGRectGetWidth(frame), CGRectGetHeight(frame));
 }
 
 - (void)setVisible:(BOOL)visible
 {
 	_visible = visible;
-	
+
 	CGFloat newAlpha = _visible ? 1. : 0.;
-	
+
 	NSTimeInterval animationDuration = _animated ? AGPhotoBrowserAnimationDuration : 0;
-	
+
 	[UIView animateWithDuration:animationDuration
 					 animations:^(){
 						 self.alpha = newAlpha;
@@ -207,24 +207,24 @@
 - (void)setTitle:(NSString *)title
 {
 	_title = title;
-	
+
     if (_title) {
         self.titleLabel.text = _title;
     }
-    
+
     [self setNeedsLayout];
 }
 
 - (void)setDescription:(NSString *)description
 {
 	_description = description;
-	
+
 	if ([_description length]) {
 		self.descriptionLabel.text = _description;
 	} else {
 		self.descriptionLabel.text = @"";
 	}
-    
+
     [self setNeedsLayout];
 }
 
@@ -240,7 +240,7 @@
 		_gradientLayer.colors = [NSArray arrayWithObjects:(id)[[UIColor clearColor] CGColor], (id)[[UIColor blackColor] CGColor], nil];
 		[_sharingView.layer insertSublayer:_gradientLayer atIndex:0];
 	}
-	
+
 	return _sharingView;
 }
 
@@ -252,7 +252,7 @@
 		_titleLabel.font = [UIFont boldSystemFontOfSize:14];
 		_titleLabel.backgroundColor = [UIColor clearColor];
 	}
-	
+
 	return _titleLabel;
 }
 
@@ -263,7 +263,7 @@
 		_separatorView.backgroundColor = [UIColor lightGrayColor];
         _separatorView.hidden = YES;
 	}
-	
+
 	return _separatorView;
 }
 
@@ -276,7 +276,7 @@
 		_descriptionLabel.backgroundColor = [UIColor clearColor];
 		_descriptionLabel.numberOfLines = 0;
 	}
-	
+
 	return _descriptionLabel;
 }
 
@@ -289,10 +289,10 @@
 		[_seeMoreButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
 		_seeMoreButton.titleLabel.font = [UIFont boldSystemFontOfSize:13];
         _seeMoreButton.hidden = YES;
-		
+
 		[_seeMoreButton addTarget:self action:@selector(p_seeMoreButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 	}
-	
+
 	return _seeMoreButton;
 }
 
@@ -305,10 +305,10 @@
 		[_actionButton setTitleColor:[UIColor colorWithWhite:0.9 alpha:0.9] forState:UIControlStateNormal];
 		[_actionButton setTitleColor:[UIColor colorWithWhite:0.9 alpha:0.9] forState:UIControlStateHighlighted];
 		[_actionButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0f]];
-        
+
 		[_actionButton addTarget:self action:@selector(p_actionButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 	}
-	
+
 	return _actionButton;
 }
 
@@ -318,7 +318,7 @@
 		_tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(p_tapGestureTapped:)];
 		_tapGesture.numberOfTouchesRequired = 1;
 	}
-	
+
 	return _tapGesture;
 }
 
