@@ -207,8 +207,6 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 	[UIView animateWithDuration:AGPhotoBrowserAnimationDuration
 					 animations:^(){
 						 self.backgroundColor = [UIColor colorWithWhite:0. alpha:1.];
-
-						 [[UIApplication sharedApplication] setStatusBarHidden:YES];
 					 }
 					 completion:^(BOOL finished){
 						 if (finished) {
@@ -235,8 +233,6 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 					 animations:^(){
 						 self.photoTableView.alpha = 0.;
 						 self.backgroundColor = [UIColor colorWithWhite:0. alpha:0.];
-
-						 [[UIApplication sharedApplication] setStatusBarHidden:NO];
 					 }
 					 completion:^(BOOL finished){
 						 self.userInteractionEnabled = NO;
@@ -303,8 +299,6 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 	AGPhotoBrowserZoomableView *imageView = (AGPhotoBrowserZoomableView *)recognizer.view;
 
 	if (recognizer.state == UIGestureRecognizerStateBegan) {
-        // -- Show back status bar
-        [[UIApplication sharedApplication] setStatusBarHidden:NO];
 		// -- Disable table view scrolling
 		self.photoTableView.scrollEnabled = NO;
 		// -- Hide detailed view
@@ -329,8 +323,6 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 								 self.backgroundColor = [UIColor colorWithWhite:0. alpha:1.];
 								 imageView.center = self->_startingPanPoint;
 							 } completion:^(BOOL finished){
-                                 // -- Hide status bar
-                                 [[UIApplication sharedApplication] setStatusBarHidden:YES];
 								 // -- show detailed view?
 								 self.displayingDetailedView = YES;
 							 }];
