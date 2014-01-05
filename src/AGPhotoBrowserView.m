@@ -256,15 +256,11 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 - (void)sharingView:(AGPhotoBrowserOverlayView *)sharingView didTapOnSeeMoreButton:(UIButton *)actionButton
 {
 	CGSize descriptionSize;
-	if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1) {
-		descriptionSize = [sharingView.description sizeWithFont:sharingView.descriptionLabel.font constrainedToSize:CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds) - 40, MAXFLOAT)];
-	} else {
-		NSDictionary *textAttributes = @{NSFontAttributeName : sharingView.descriptionLabel.font};
-		CGRect descriptionBoundingRect = [sharingView.description boundingRectWithSize:CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds) - 40, MAXFLOAT)
-																			   options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:textAttributes
-																			   context:nil];
-		descriptionSize = CGSizeMake(ceil(CGRectGetWidth(descriptionBoundingRect)), ceil(CGRectGetHeight(descriptionBoundingRect)));
-	}
+    NSDictionary *textAttributes = @{NSFontAttributeName : sharingView.descriptionLabel.font};
+    CGRect descriptionBoundingRect = [sharingView.description boundingRectWithSize:CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds) - 40, MAXFLOAT)
+                                                                           options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:textAttributes
+                                                                           context:nil];
+    descriptionSize = CGSizeMake(ceil(CGRectGetWidth(descriptionBoundingRect)), ceil(CGRectGetHeight(descriptionBoundingRect)));
 
 	CGRect currentOverlayFrame = self.overlayView.frame;
 	int newSharingHeight = CGRectGetHeight(currentOverlayFrame) -20 + ceil(descriptionSize.height);
