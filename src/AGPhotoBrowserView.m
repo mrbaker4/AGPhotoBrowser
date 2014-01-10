@@ -344,10 +344,10 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 100;
 {
 	if (!_doneButton) {
 		int currentScreenWidth = CGRectGetWidth([[UIScreen mainScreen] bounds]);
-		_doneButton = [[UIButton alloc] initWithFrame:CGRectMake(currentScreenWidth - 60 - 10, 20, 60, 32)];
+		_doneButton = [[UIButton alloc] initWithFrame:CGRectMake(currentScreenWidth - 70, 12, 60, 32)];
 		[_doneButton setTitle:@"Close" forState:UIControlStateNormal];
         [_doneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateApplication];
-		[_doneButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0f]];
+		[_doneButton.titleLabel setFont:[UIFont boldSystemFontOfSize:16.0f]];
 		_doneButton.alpha = 0.;
         [_doneButton setTitleShadowColor:[UIColor blackColor] forState:UIControlStateNormal];
         [_doneButton.titleLabel setShadowOffset:CGSizeMake(1.0, 1.0)];
