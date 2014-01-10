@@ -24,7 +24,6 @@
 @property (nonatomic, strong, readwrite) UILabel *descriptionLabel;
 @property (nonatomic, strong) UIView *separatorView;
 @property (nonatomic, strong) UIButton *seeMoreButton;
-@property (nonatomic, strong, readwrite) UIButton *actionButton;
 
 @property (nonatomic, assign, readwrite, getter = isVisible) BOOL visible;
 
@@ -89,8 +88,6 @@
 		self.titleLabel.hidden = YES;
 		self.separatorView.hidden = YES;
 	}
-
-	self.actionButton.frame = CGRectMake(CGRectGetWidth(self.sharingView.frame) - 55 - 10, CGRectGetHeight(self.sharingView.frame) - 32 - 5, 55, 32);
 }
 
 - (void)setupView
@@ -286,22 +283,6 @@
 	}
 
 	return _seeMoreButton;
-}
-
-- (UIButton *)actionButton
-{
-	if (!_actionButton) {
-		_actionButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.frame) - 55 - 10, CGRectGetHeight(self.frame) - 32 - 5, 55, 32)];
-		[_actionButton setTitle:NSLocalizedString(@"● ● ●", @"Title for Action button") forState:UIControlStateNormal];
-		[_actionButton setBackgroundColor:[UIColor clearColor]];
-		[_actionButton setTitleColor:[UIColor colorWithWhite:0.9 alpha:0.9] forState:UIControlStateNormal];
-		[_actionButton setTitleColor:[UIColor colorWithWhite:0.9 alpha:0.9] forState:UIControlStateHighlighted];
-		[_actionButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0f]];
-
-		[_actionButton addTarget:self action:@selector(p_actionButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-	}
-
-	return _actionButton;
 }
 
 - (UITapGestureRecognizer *)tapGesture

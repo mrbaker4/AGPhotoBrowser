@@ -40,7 +40,7 @@ static NSString *CellIdentifier = @"AGPhotoBrowserCell";
 
 @implementation AGPhotoBrowserView
 
-const NSInteger AGPhotoBrowserThresholdToCenter = 150;
+const NSInteger AGPhotoBrowserThresholdToCenter = 100;
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -345,16 +345,12 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 	if (!_doneButton) {
 		int currentScreenWidth = CGRectGetWidth([[UIScreen mainScreen] bounds]);
 		_doneButton = [[UIButton alloc] initWithFrame:CGRectMake(currentScreenWidth - 60 - 10, 20, 60, 32)];
-		[_doneButton setTitle:NSLocalizedString(@"Done", @"Title for Done button") forState:UIControlStateNormal];
-		_doneButton.layer.cornerRadius = 3.0f;
-		_doneButton.layer.borderColor = [UIColor colorWithWhite:0.9 alpha:0.9].CGColor;
-		_doneButton.layer.borderWidth = 1.0f;
-		[_doneButton setBackgroundColor:[UIColor colorWithWhite:0.1 alpha:0.5]];
-		[_doneButton setTitleColor:[UIColor colorWithWhite:0.9 alpha:0.9] forState:UIControlStateNormal];
-		[_doneButton setTitleColor:[UIColor colorWithWhite:0.9 alpha:0.9] forState:UIControlStateHighlighted];
+		[_doneButton setTitle:@"Close" forState:UIControlStateNormal];
+        [_doneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateApplication];
 		[_doneButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0f]];
 		_doneButton.alpha = 0.;
-
+        [_doneButton setTitleShadowColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [_doneButton.titleLabel setShadowOffset:CGSizeMake(1.0, 1.0)];
 		[_doneButton addTarget:self action:@selector(p_doneButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 	}
 
