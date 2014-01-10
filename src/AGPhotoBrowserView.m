@@ -190,6 +190,7 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 150;
 
 - (void)showFromIndex:(NSInteger)initialIndex
 {
+    [self.photoTableView reloadData];
 	if (initialIndex < [_dataSource numberOfPhotosForPhotoBrowser:self]) {
 		[self.photoTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:initialIndex inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
 	}
