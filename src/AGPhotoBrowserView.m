@@ -10,6 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "AGPhotoBrowserCell.h"
 #import "AGPhotoBrowserZoomableView.h"
+#import "AGPhotoBrowserConstants.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 
 @interface AGPhotoBrowserView () <AGPhotoBrowserZoomableViewDelegate, UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate>

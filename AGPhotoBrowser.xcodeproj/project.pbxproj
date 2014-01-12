@@ -48,6 +48,7 @@
 /* Begin PBXFileReference section */
 		4B9A166E1881E686000BB3C2 /* AGPhotoBrowserCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGPhotoBrowserCell.h; sourceTree = "<group>"; };
 		4B9A166F1881E686000BB3C2 /* AGPhotoBrowserCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPhotoBrowserCell.m; sourceTree = "<group>"; };
+		4B9A167118830154000BB3C2 /* AGPhotoBrowserConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AGPhotoBrowserConstants.h; sourceTree = "<group>"; };
 		8D3D8ABA184202DE00154B6B /* AGPhotoBrowserZoomableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGPhotoBrowserZoomableView.h; sourceTree = "<group>"; };
 		8D3D8ABB184202DE00154B6B /* AGPhotoBrowserZoomableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPhotoBrowserZoomableView.m; sourceTree = "<group>"; };
 		B1CE6266E2F74C51BF33D804 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
@@ -227,6 +228,7 @@
 				8D3D8ABB184202DE00154B6B /* AGPhotoBrowserZoomableView.m */,
 				4B9A166E1881E686000BB3C2 /* AGPhotoBrowserCell.h */,
 				4B9A166F1881E686000BB3C2 /* AGPhotoBrowserCell.m */,
+				4B9A167118830154000BB3C2 /* AGPhotoBrowserConstants.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;

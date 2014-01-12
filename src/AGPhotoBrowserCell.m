@@ -7,6 +7,7 @@
 //
 
 #import "AGPhotoBrowserCell.h"
+#import "AGPhotoBrowserConstants.h"
 
 @interface AGPhotoBrowserCell ()
 

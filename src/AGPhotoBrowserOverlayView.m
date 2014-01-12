@@ -125,7 +125,7 @@
 						 } completion:^(BOOL finished){
 							 initialSharingFrame.size.height = AGPhotoBrowserOverlayInitialHeight;
 							 [self setNeedsLayout];
-							 [UIView animateWithDuration:AGPhotoBrowserAnimationDuration
+							 [UIView animateWithDuration:0.25
 											  animations:^(){
 												  self.frame = initialSharingFrame;
 											  }];
@@ -159,7 +159,7 @@
 
 	CGFloat newAlpha = _visible ? 1. : 0.;
 
-	NSTimeInterval animationDuration = _animated ? AGPhotoBrowserAnimationDuration : 0;
+	NSTimeInterval animationDuration = _animated ? 0.25 : 0;
 
 	[UIView animateWithDuration:animationDuration
 					 animations:^(){
