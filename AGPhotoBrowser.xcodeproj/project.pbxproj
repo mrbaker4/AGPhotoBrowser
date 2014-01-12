@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4B9A16701881E686000BB3C2 /* AGPhotoBrowserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B9A166F1881E686000BB3C2 /* AGPhotoBrowserCell.m */; };
 		8D3D8ABC184202DE00154B6B /* AGPhotoBrowserZoomableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3D8ABB184202DE00154B6B /* AGPhotoBrowserZoomableView.m */; };
 		CBC5EBE3B0134ADC8EB17C73 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B96E339761214CE8968AB2EC /* libPods.a */; };
 		DE2A3D7A17A575C700CE0CA5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE2A3D7917A575C700CE0CA5 /* UIKit.framework */; };
@@ -45,6 +46,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4B9A166E1881E686000BB3C2 /* AGPhotoBrowserCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGPhotoBrowserCell.h; sourceTree = "<group>"; };
+		4B9A166F1881E686000BB3C2 /* AGPhotoBrowserCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPhotoBrowserCell.m; sourceTree = "<group>"; };
 		8D3D8ABA184202DE00154B6B /* AGPhotoBrowserZoomableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGPhotoBrowserZoomableView.h; sourceTree = "<group>"; };
 		8D3D8ABB184202DE00154B6B /* AGPhotoBrowserZoomableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPhotoBrowserZoomableView.m; sourceTree = "<group>"; };
 		B1CE6266E2F74C51BF33D804 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
@@ -222,6 +225,8 @@
 				DE48791B17CA84740048D0FC /* AGPhotoBrowserView.m */,
 				8D3D8ABA184202DE00154B6B /* AGPhotoBrowserZoomableView.h */,
 				8D3D8ABB184202DE00154B6B /* AGPhotoBrowserZoomableView.m */,
+				4B9A166E1881E686000BB3C2 /* AGPhotoBrowserCell.h */,
+				4B9A166F1881E686000BB3C2 /* AGPhotoBrowserCell.m */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -376,6 +381,7 @@
 				DE2A3D9317A575C700CE0CA5 /* ViewController.m in Sources */,
 				8D3D8ABC184202DE00154B6B /* AGPhotoBrowserZoomableView.m in Sources */,
 				DE48791C17CA84740048D0FC /* AGPhotoBrowserOverlayView.m in Sources */,
+				4B9A16701881E686000BB3C2 /* AGPhotoBrowserCell.m in Sources */,
 				DE48791D17CA84740048D0FC /* AGPhotoBrowserView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

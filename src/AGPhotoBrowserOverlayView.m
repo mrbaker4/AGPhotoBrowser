@@ -13,17 +13,13 @@
 
 @interface AGPhotoBrowserOverlayView () {
 	BOOL _animated;
-	CAGradientLayer *_gradientLayer;
 }
-
-@property (nonatomic, strong) UIView *sharingView;
-@property (nonatomic, assign) BOOL descriptionExpanded;
 @property (nonatomic, strong) UITapGestureRecognizer *tapGesture;
-
-@property (nonatomic, strong, readwrite) UILabel *titleLabel;
-@property (nonatomic, strong, readwrite) UILabel *descriptionLabel;
-@property (nonatomic, strong) UIView *separatorView;
 @property (nonatomic, strong) UIButton *seeMoreButton;
+
+@property (strong) UILabel *userLabel;
+@property (strong) UILabel *dateTimeLabel;
+@property (strong) UILabel *locationLabel;
 
 @property (nonatomic, assign, readwrite, getter = isVisible) BOOL visible;
 
@@ -45,65 +41,63 @@
 {
 	[super layoutSubviews];
 
-	_gradientLayer.frame = self.bounds;
-
-	self.titleLabel.frame = CGRectMake(20, 35, CGRectGetWidth(self.frame) - 40, 20);
-	self.separatorView.frame = CGRectMake(20, CGRectGetMinY(self.titleLabel.frame) + CGRectGetHeight(self.titleLabel.frame), CGRectGetWidth(self.titleLabel.frame), 1);
-
-	if (self.descriptionExpanded) {
-		CGSize descriptionSize;
-        NSDictionary *textAttributes = @{NSFontAttributeName : self.descriptionLabel.font};
-        CGRect descriptionBoundingRect = [_description boundingRectWithSize:CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds) - 40, MAXFLOAT)
-                                                                                  options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:textAttributes
-                                                                                  context:nil];
-        descriptionSize = CGSizeMake(ceil(CGRectGetWidth(descriptionBoundingRect)), ceil(CGRectGetHeight(descriptionBoundingRect)));
-		self.descriptionLabel.frame = CGRectMake(20, CGRectGetMinY(self.separatorView.frame) + CGRectGetHeight(self.separatorView.frame) + 10, 280, descriptionSize.height);
-	} else {
-		self.descriptionLabel.frame = CGRectMake(20, CGRectGetMinY(self.separatorView.frame) + CGRectGetHeight(self.separatorView.frame) + 10, 220, 20);
-		self.seeMoreButton.frame = CGRectMake(240, CGRectGetMinY(self.separatorView.frame) + CGRectGetHeight(self.separatorView.frame) + 10, 65, 20);
-	}
-
-	if ([self.descriptionLabel.text length]) {
-		CGSize descriptionSize;
-        NSDictionary *textAttributes = @{NSFontAttributeName : self.descriptionLabel.font};
-        CGRect descriptionBoundingRect = [self.descriptionLabel.text boundingRectWithSize:CGSizeMake(self.descriptionLabel.frame.size.width, MAXFLOAT)
-                                                                               options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:textAttributes
-                                                                               context:nil];
-        descriptionSize = CGSizeMake(ceil(CGRectGetWidth(descriptionBoundingRect)), ceil(CGRectGetHeight(descriptionBoundingRect)));
-        if (descriptionSize.height > self.descriptionLabel.frame.size.height) {
-            self.seeMoreButton.hidden = NO;
-        } else {
-            self.seeMoreButton.hidden = YES;
-        }
-        self.descriptionLabel.hidden = NO;
-    } else {
-        self.descriptionLabel.hidden = YES;
-        self.seeMoreButton.hidden = YES;
+    CGRect screenSize = [[UIScreen mainScreen] bounds];
+    float screenHeight = screenSize.size.height;
+    float locationOffset = 0.0;
+    if (![self.locationLabel.text length]) {
+        locationOffset = 18.0;
     }
-
-    if ([_title length]) {
-		self.titleLabel.hidden = NO;
-		self.separatorView.hidden = NO;
-	} else {
-		self.titleLabel.hidden = YES;
-		self.separatorView.hidden = YES;
-	}
+    [self.locationLabel setFrame:CGRectMake(80.0, screenHeight-36.0, 160.0, 20.0)];
+    [self.dateTimeLabel setFrame:CGRectMake(80.0, screenHeight-54.0+locationOffset, 160.0, 20.0)];
+    [self.userLabel setFrame:CGRectMake(80.0, screenHeight-74.0+locationOffset, 160.0, 20.0)];
 }
 
 - (void)setupView
 {
-	self.alpha = 0;
-	self.userInteractionEnabled = YES;
+	self.alpha = 0.0;
+	self.userInteractionEnabled = NO;
 
-	[self.sharingView addSubview:self.titleLabel];
-	[self.sharingView addSubview:self.separatorView];
-	[self.sharingView addSubview:self.descriptionLabel];
-	[self.sharingView addSubview:self.seeMoreButton];
-	//[self.sharingView addSubview:self.actionButton];
+    [self userLabelSetup];
+    [self dateTimeLabelSetup];
+    [self locationLabelSetup];
 
-	[self addSubview:self.sharingView];
+	[self addSubview:self.userLabel];
+    [self addSubview:self.dateTimeLabel];
+	[self addSubview:self.locationLabel];
+    /*
+     Uncomment the following line to add in an action button.
+	[self addSubview:self.actionButton];
+     */
 }
 
+- (void) userLabelSetup {
+    self.userLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 160.0, 20.0)];
+    [self.userLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.userLabel setFont:[UIFont boldSystemFontOfSize:16.0]];
+    [self.userLabel setBackgroundColor:[UIColor clearColor]];
+    [self.userLabel setTextColor:[UIColor whiteColor]];
+    [self.userLabel setShadowOffset:CGSizeMake(1.0, 1.0)];
+    [self.userLabel setShadowColor:[UIColor colorWithWhite:0.0 alpha:0.75]];
+}
+
+- (void) dateTimeLabelSetup {
+    self.dateTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 160.0, 20.0)];
+    [self.dateTimeLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.dateTimeLabel setFont:[UIFont boldSystemFontOfSize:16.0]];
+    [self.dateTimeLabel setBackgroundColor:[UIColor clearColor]];
+    [self.dateTimeLabel setTextColor:[UIColor whiteColor]];
+    [self.dateTimeLabel setShadowOffset:CGSizeMake(1.0, 1.0)];
+    [self.dateTimeLabel setShadowColor:[UIColor colorWithWhite:0.0 alpha:0.75]];
+}
+
+- (void) locationLabelSetup {
+    self.locationLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 160.0, 20.0)];
+    [self.locationLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.locationLabel setFont:[UIFont systemFontOfSize:12.0]];
+    [self.locationLabel setTextColor:[UIColor whiteColor]];
+    [self.locationLabel setShadowOffset:CGSizeMake(1.0, 1.0)];
+    [self.locationLabel setShadowColor:[UIColor colorWithWhite:0.0 alpha:0.75]];
+}
 
 #pragma mark - Public methods
 
@@ -130,7 +124,6 @@
 							 self.frame = initialSharingFrame;
 						 } completion:^(BOOL finished){
 							 initialSharingFrame.size.height = AGPhotoBrowserOverlayInitialHeight;
-							 self.descriptionExpanded = NO;
 							 [self setNeedsLayout];
 							 [UIView animateWithDuration:AGPhotoBrowserAnimationDuration
 											  animations:^(){
@@ -150,16 +143,6 @@
 	}
 }
 
-- (void)p_seeMoreButtonTapped:(UIButton *)sender
-{
-	if ([_delegate respondsToSelector:@selector(sharingView:didTapOnSeeMoreButton:)]) {
-		[_delegate sharingView:self didTapOnSeeMoreButton:sender];
-		self.descriptionExpanded = YES;
-		[self setNeedsLayout];
-		[self.sharingView addGestureRecognizer:self.tapGesture];
-	}
-}
-
 
 #pragma mark - Recognizers
 
@@ -170,14 +153,6 @@
 
 
 #pragma mark - Setters
-
-- (void)setFrame:(CGRect)frame
-{
-	[super setFrame:frame];
-
-	self.sharingView.frame = CGRectMake(0, 0, CGRectGetWidth(frame), CGRectGetHeight(frame));
-}
-
 - (void)setVisible:(BOOL)visible
 {
 	_visible = visible;
@@ -189,85 +164,38 @@
 	[UIView animateWithDuration:animationDuration
 					 animations:^(){
 						 self.alpha = newAlpha;
-						 self.actionButton.alpha = newAlpha;
 					 }];
 }
 
-- (void)setTitle:(NSString *)title
-{
-	_title = title;
+- (void)setUsername:(NSString *)username {
 
-    if (_title) {
-        self.titleLabel.text = _title;
+    if (username) {
+        self.userLabel.text = username;
     }
 
     [self setNeedsLayout];
 }
 
-- (void)setDescription:(NSString *)description
-{
-	_description = description;
-
-	if ([_description length]) {
-		self.descriptionLabel.text = _description;
-	} else {
-		self.descriptionLabel.text = @"";
+- (void)setDateTime:(NSString *)dateTime {
+	if (dateTime) {
+        self.dateTimeLabel.text = dateTime;
 	}
+
+    [self setNeedsLayout];
+}
+
+- (void)setLocation:(NSString *)location {
+    if ([location length]) {
+        self.locationLabel.text = location;
+    } else {
+        self.locationLabel.text = @"";
+    }
 
     [self setNeedsLayout];
 }
 
 
 #pragma mark - Getters
-
-- (UIView *)sharingView
-{
-	if (!_sharingView) {
-		_sharingView = [[UIView alloc] initWithFrame:self.bounds];
-		_gradientLayer = [CAGradientLayer layer];
-		_gradientLayer.frame = self.bounds;
-		_gradientLayer.colors = [NSArray arrayWithObjects:(id)[[UIColor clearColor] CGColor], (id)[[UIColor blackColor] CGColor], nil];
-		[_sharingView.layer insertSublayer:_gradientLayer atIndex:0];
-	}
-
-	return _sharingView;
-}
-
-- (UILabel *)titleLabel
-{
-	if (!_titleLabel) {
-		_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 40, CGRectGetWidth(self.frame) - 40, 20)];
-		_titleLabel.textColor = [UIColor colorWithWhite:0.9 alpha:0.9];
-		_titleLabel.font = [UIFont boldSystemFontOfSize:14];
-		_titleLabel.backgroundColor = [UIColor clearColor];
-	}
-
-	return _titleLabel;
-}
-
-- (UIView *)separatorView
-{
-	if (!_separatorView) {
-		_separatorView = [[UIView alloc] initWithFrame:CGRectMake(20, CGRectGetMinY(self.titleLabel.frame) + CGRectGetHeight(self.titleLabel.frame), 280, 1)];
-		_separatorView.backgroundColor = [UIColor lightGrayColor];
-        _separatorView.hidden = YES;
-	}
-
-	return _separatorView;
-}
-
-- (UILabel *)descriptionLabel
-{
-	if (!_descriptionLabel) {
-		_descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, CGRectGetHeight(self.frame) - 10 - 23, 160, 20)];
-		_descriptionLabel.textColor = [UIColor colorWithWhite:0.9 alpha:0.9];
-		_descriptionLabel.font = [UIFont systemFontOfSize:13];
-		_descriptionLabel.backgroundColor = [UIColor clearColor];
-		_descriptionLabel.numberOfLines = 0;
-	}
-
-	return _descriptionLabel;
-}
 
 - (UIButton *)seeMoreButton
 {

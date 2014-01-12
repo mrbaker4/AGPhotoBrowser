@@ -11,4 +11,6 @@
 #ifdef __OBJC__
 	#import <UIKit/UIKit.h>
 	#import <Foundation/Foundation.h>
+    static const CGFloat AGPhotoBrowserAnimationDuration = 0.25;
 #endif
+

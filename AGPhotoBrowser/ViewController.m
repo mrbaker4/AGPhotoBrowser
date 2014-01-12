@@ -35,18 +35,21 @@
 	_samplePictures = @[
 	@{
 		  @"Image": SAMPLE_IMAGE_1,
-		  @"Title" : @"Hot air balloons",
-		  @"Description" : @"Really cool!"
+		  @"User" : @"Matt",
+          @"DateTime" : @"Jan 1, 1990",
+		  @"Location" : @""
 	},
 	  @{
 		  @"Image": SAMPLE_IMAGE_2,
-		  @"Title" : @"Drop on a leaf",
-		  @"Description" : @"A very long and meaningful description about a drop on a leaf.\n\nThis description is so interesting that i am never bored reading it!\n\nI could go on and on and on and on and on and on..."
+		  @"User" : @"Abram",
+          @"DateTime" : @"May 22, 1987",
+          @"Location" : @"San Francisco, CA"
 	},
 	  @{
 		  @"Image": SAMPLE_IMAGE_3,
-		  @"Title" : @"Rainbow flower",
-		  @"Description" : @"A colorful image"
+		  @"User" : @"Shri",
+          @"DateTime" : @"May 22, 1990",
+          @"Location" : @"San Francisco, CA"
 	},
 	];
 }
@@ -117,7 +120,7 @@
 		[cell.contentView addSubview:titleLabel];
 	}
 
-	titleLabel.text = [self photoBrowser:self.browserView titleForImageAtIndex:indexPath.row];
+	titleLabel.text = [self photoBrowser:self.browserView userForImageAtIndex:indexPath.row];
 	//imageView.image = [self photoBrowser:self.browserView imageAtIndex:indexPath.row];
 }
 
@@ -133,14 +136,18 @@
     return [[_samplePictures objectAtIndex:index] objectForKey:@"Image"];
 }
 
-- (NSString *)photoBrowser:(AGPhotoBrowserView *)photoBrowser titleForImageAtIndex:(NSInteger)index
+- (NSString *)photoBrowser:(AGPhotoBrowserView *)photoBrowser userForImageAtIndex:(NSInteger)index
 {
-	return [[_samplePictures objectAtIndex:index] objectForKey:@"Title"];
+	return [[_samplePictures objectAtIndex:index] objectForKey:@"User"];
 }
 
-- (NSString *)photoBrowser:(AGPhotoBrowserView *)photoBrowser descriptionForImageAtIndex:(NSInteger)index
+- (NSString *)photoBrowser:(AGPhotoBrowserView *)photoBrowser locationForImageAtIndex:(NSInteger)index
 {
-	return [[_samplePictures objectAtIndex:index] objectForKey:@"Description"];
+	return [[_samplePictures objectAtIndex:index] objectForKey:@"Location"];
+}
+
+- (NSString *)photoBrowser:(AGPhotoBrowserView *)photoBrowser dateTimeForImageAtIndex:(NSInteger)index {
+    return [[_samplePictures objectAtIndex:index] objectForKey:@"DateTime"];
 }
 
 - (BOOL)photoBrowser:(AGPhotoBrowserView *)photoBrowser willDisplayActionButtonAtIndex:(NSInteger)index

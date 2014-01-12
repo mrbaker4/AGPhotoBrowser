@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-static const CGFloat AGPhotoBrowserAnimationDuration = 0.25;
 static const NSInteger AGPhotoBrowserOverlayInitialHeight = 120;
 
 @class AGPhotoBrowserOverlayView;
@@ -16,8 +15,6 @@ static const NSInteger AGPhotoBrowserOverlayInitialHeight = 120;
 @protocol AGPhotoBrowserOverlayViewDelegate <NSObject>
 
 - (void)sharingView:(AGPhotoBrowserOverlayView *)sharingView didTapOnActionButton:(UIButton *)actionButton;
-@optional
-- (void)sharingView:(AGPhotoBrowserOverlayView *)sharingView didTapOnSeeMoreButton:(UIButton *)actionButton;
 
 @end
 
@@ -25,13 +22,11 @@ static const NSInteger AGPhotoBrowserOverlayInitialHeight = 120;
 
 @property (nonatomic, weak) id<AGPhotoBrowserOverlayViewDelegate> delegate;
 
-@property (nonatomic, copy) NSString *title;
-@property (nonatomic, copy) NSString *description;
-@property (nonatomic, strong, readonly) UIButton *actionButton;
-@property (nonatomic, strong, readonly) UILabel *_userLabel;
-@property (nonatomic, strong, readonly) UILabel *descriptionLabel;
-
 @property (nonatomic, assign, readonly, getter = isVisible) BOOL visible;
+
+- (void)setUsername:(NSString *)username;
+- (void)setDateTime:(NSString *)dateTime;
+- (void)setLocation:(NSString *)location;
 
 - (void)showOverlayAnimated:(BOOL)animated;
 - (void)hideOverlayAnimated:(BOOL)animated;

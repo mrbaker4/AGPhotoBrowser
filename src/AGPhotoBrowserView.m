@@ -7,44 +7,27 @@
 //
 
 #import "AGPhotoBrowserView.h"
-
 #import <QuartzCore/QuartzCore.h>
-#import "AGPhotoBrowserOverlayView.h"
+#import "AGPhotoBrowserCell.h"
 #import "AGPhotoBrowserZoomableView.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 
-@interface AGPhotoBrowserView () <
-AGPhotoBrowserOverlayViewDelegate,
-AGPhotoBrowserZoomableViewDelegate,
-UITableViewDataSource,
-UITableViewDelegate,
-UIGestureRecognizerDelegate
-> {
-	CGPoint _startingPanPoint;
-	BOOL _wantedFullscreenLayout;
-    BOOL _navigationBarWasHidden;
-	CGRect _originalParentViewFrame;
-	NSInteger _currentlySelectedIndex;
-}
+@interface AGPhotoBrowserView () <AGPhotoBrowserZoomableViewDelegate, UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate>
 
+@property (assign) CGPoint startingPanPoint;
 @property (nonatomic, strong, readwrite) UIButton *doneButton;
 @property (nonatomic, strong) UITableView *photoTableView;
-@property (nonatomic, strong) AGPhotoBrowserOverlayView *overlayView;
-
-@property (nonatomic, assign, getter = isDisplayingDetailedView) BOOL displayingDetailedView;
+@property (nonatomic, assign, getter = isShowingCellDetails) BOOL showCellDetail;
 
 @end
 
-
 static NSString *CellIdentifier = @"AGPhotoBrowserCell";
+const NSInteger AGPhotoBrowserThresholdToCenter = 100;
 
 @implementation AGPhotoBrowserView
 
-const NSInteger AGPhotoBrowserThresholdToCenter = 100;
-
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:[UIScreen mainScreen].bounds];
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:[[UIScreen mainScreen] bounds]];
     if (self) {
         // Initialization code
 		[self setupView];
@@ -52,65 +35,50 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 100;
     return self;
 }
 
-- (void)setupView
-{
+- (void)setupView {
 	self.userInteractionEnabled = NO;
-	self.backgroundColor = [UIColor colorWithWhite:0. alpha:0.];
-	_currentlySelectedIndex = NSNotFound;
+	self.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.0];
 
 	[self addSubview:self.photoTableView];
 	[self addSubview:self.doneButton];
-	[self addSubview:self.overlayView];
 }
 
 
 #pragma mark - UITableViewDataSource
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	NSInteger number = [_dataSource numberOfPhotosForPhotoBrowser:self];
-
-    if (number > 0 && _currentlySelectedIndex == NSNotFound) {
-        // initialize with info for the first photo in photoTable
-        [self setupPhotoForIndex:0];
-    }
 
     return number;
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
 	cell.backgroundColor = [UIColor clearColor];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+- (float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return CGRectGetHeight([[UIScreen mainScreen] bounds]);
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    AGPhotoBrowserCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[AGPhotoBrowserCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
 
-    if ([self.dataSource respondsToSelector:@selector(photoBrowser:willDisplayActionButtonAtIndex:)]) {
-        self.overlayView.actionButton.hidden = [self.dataSource photoBrowser:self willDisplayActionButtonAtIndex:indexPath.row];
-    } else {
-        self.overlayView.actionButton.hidden = NO;
-    }
-
-	[self setupPhotoForIndex:indexPath.row];
 
     [self configureCell:cell forRowAtIndexPath:indexPath];
+    [cell setDetailsVisable:self.isShowingCellDetails];
 
     return cell;
 }
 
-- (void)configureCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)configureCell:(AGPhotoBrowserCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     AGPhotoBrowserZoomableView *imageView = (AGPhotoBrowserZoomableView *)[cell.contentView viewWithTag:1];
 	if (!imageView) {
 		imageView = [[AGPhotoBrowserZoomableView alloc] initWithFrame:self.bounds];
@@ -131,47 +99,31 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 100;
         [imageView setZoomScale:1.0f];
     }
 
-    if ([_dataSource respondsToSelector:@selector(photoBrowser:URLForImageAtIndex:)]) {
-        [imageView setImageWithURL:[_dataSource photoBrowser:self URLForImageAtIndex:indexPath.row]];
-    }
-    else if ([_dataSource respondsToSelector:@selector(photoBrowser:imageAtIndex:)]) {
-        [imageView setImage:[_dataSource photoBrowser:self imageAtIndex:indexPath.row]];
-    }
-}
+    [imageView setImageWithURL:[_dataSource photoBrowser:self URLForImageAtIndex:indexPath.row]];
 
-- (void)setupPhotoForIndex:(int)index
-{
-    _currentlySelectedIndex = index;
-
-	if ([_dataSource respondsToSelector:@selector(photoBrowser:titleForImageAtIndex:)]) {
-		self.overlayView.title = [_dataSource photoBrowser:self titleForImageAtIndex:index];
-	} else {
-        self.overlayView.title = @"";
-    }
-
-	if ([_dataSource respondsToSelector:@selector(photoBrowser:descriptionForImageAtIndex:)]) {
-		self.overlayView.description = [_dataSource photoBrowser:self descriptionForImageAtIndex:index];
-	} else {
-        self.overlayView.description = @"";
-    }
+    [cell.userLabel setText:[_dataSource photoBrowser:self userForImageAtIndex:indexPath.row]];
+    [cell.locationLabel setText:[_dataSource photoBrowser:self locationForImageAtIndex:indexPath.row]];
+    [cell.dateTimeLabel setText:[_dataSource photoBrowser:self dateTimeForImageAtIndex:indexPath.row]];
 }
 
 #pragma mark - UITableViewDelegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    self.displayingDetailedView = !self.isDisplayingDetailedView;
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    self.showCellDetail = !self.isShowingCellDetails;
+    AGPhotoBrowserCell *cell = (AGPhotoBrowserCell *)[tableView cellForRowAtIndexPath:indexPath];
+    [cell setDetailsVisable:self.isShowingCellDetails];
 }
 
-- (void)didTapZoomableView:(AGPhotoBrowserZoomableView *)zoomableView
-{
-    self.displayingDetailedView = !self.isDisplayingDetailedView;
+- (void)didTapZoomableView:(AGPhotoBrowserZoomableView *)zoomableView {
+    self.showCellDetail = !self.isShowingCellDetails;
+
+    AGPhotoBrowserCell *cell = (AGPhotoBrowserCell *)[[self.photoTableView visibleCells] firstObject];
+    [cell setDetailsVisable:self.isShowingCellDetails];
 }
 
 #pragma mark - Public methods
 
-- (void)show
-{
+- (void)show {
     [[[UIApplication sharedApplication].windows lastObject] addSubview:self];
 
 	[UIView animateWithDuration:AGPhotoBrowserAnimationDuration
@@ -181,15 +133,14 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 100;
 					 completion:^(BOOL finished){
 						 if (finished) {
 							 self.userInteractionEnabled = YES;
-							 self.displayingDetailedView = YES;
+                             self.showCellDetail = YES;
 							 self.photoTableView.alpha = 1.;
 							 [self.photoTableView reloadData];
 						 }
 					 }];
 }
 
-- (void)showFromIndex:(NSInteger)initialIndex
-{
+- (void)showFromIndex:(NSInteger)initialIndex {
     [self.photoTableView reloadData];
 	if (initialIndex < [_dataSource numberOfPhotosForPhotoBrowser:self]) {
 		[self.photoTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:initialIndex inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
@@ -198,8 +149,7 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 100;
 	[self show];
 }
 
-- (void)hideWithCompletion:( void (^) (BOOL finished) )completionBlock
-{
+- (void)hideWithCompletion:( void (^) (BOOL finished) )completionBlock {
 	[UIView animateWithDuration:AGPhotoBrowserAnimationDuration
 					 animations:^(){
 						 self.photoTableView.alpha = 0.;
@@ -214,39 +164,9 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 100;
 					 }];
 }
 
-
-#pragma mark - AGPhotoBrowserOverlayViewDelegate
-
-- (void)sharingView:(AGPhotoBrowserOverlayView *)sharingView didTapOnActionButton:(UIButton *)actionButton
-{
-	if ([_delegate respondsToSelector:@selector(photoBrowser:didTapOnActionButton:atIndex:)]) {
-		[_delegate photoBrowser:self didTapOnActionButton:actionButton atIndex:_currentlySelectedIndex];
-	}
-}
-
-- (void)sharingView:(AGPhotoBrowserOverlayView *)sharingView didTapOnSeeMoreButton:(UIButton *)actionButton
-{
-	CGSize descriptionSize;
-    NSDictionary *textAttributes = @{NSFontAttributeName : sharingView.descriptionLabel.font};
-    CGRect descriptionBoundingRect = [sharingView.description boundingRectWithSize:CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds) - 40, MAXFLOAT)
-                                                                           options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:textAttributes
-                                                                           context:nil];
-    descriptionSize = CGSizeMake(ceil(CGRectGetWidth(descriptionBoundingRect)), ceil(CGRectGetHeight(descriptionBoundingRect)));
-
-	CGRect currentOverlayFrame = self.overlayView.frame;
-	int newSharingHeight = CGRectGetHeight(currentOverlayFrame) -20 + ceil(descriptionSize.height);
-
-	[UIView animateWithDuration:AGPhotoBrowserAnimationDuration
-					 animations:^(){
-						 self.overlayView.frame = CGRectMake(0, floor(CGRectGetHeight(self.frame) - newSharingHeight), CGRectGetWidth(self.frame), newSharingHeight);
-					 }];
-}
-
-
 #pragma mark - UIGestureRecognizerDelegate
 
-- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)gestureRecognizer
-{
+- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)gestureRecognizer {
     UIView *imageView = [gestureRecognizer view];
     CGPoint translation = [gestureRecognizer translationInView:[imageView superview]];
 
@@ -262,16 +182,15 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 100;
 
 #pragma mark - Recognizers
 
-- (void)p_imageViewPanned:(UIPanGestureRecognizer *)recognizer
-{
+- (void)p_imageViewPanned:(UIPanGestureRecognizer *)recognizer {
 	AGPhotoBrowserZoomableView *imageView = (AGPhotoBrowserZoomableView *)recognizer.view;
 
 	if (recognizer.state == UIGestureRecognizerStateBegan) {
 		// -- Disable table view scrolling
 		self.photoTableView.scrollEnabled = NO;
 		// -- Hide detailed view
-		self.displayingDetailedView = NO;
-		_startingPanPoint = imageView.center;
+        self.showCellDetail = NO;
+		self.startingPanPoint = imageView.center;
 		return;
 	}
 
@@ -280,8 +199,8 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 100;
 		self.photoTableView.scrollEnabled = YES;
 		// -- Check if user dismissed the view
 		CGPoint endingPanPoint = [recognizer translationInView:self];
-		CGPoint translatedPoint = CGPointMake(_startingPanPoint.x - endingPanPoint.x, _startingPanPoint.y);
-		int horizontalDistance = abs(floor(_startingPanPoint.x - translatedPoint.x));
+		CGPoint translatedPoint = CGPointMake(self.startingPanPoint.x - endingPanPoint.x, self.startingPanPoint.y);
+		int horizontalDistance = abs(floor(self.startingPanPoint.x - translatedPoint.x));
 
 		if (horizontalDistance <= AGPhotoBrowserThresholdToCenter) {
 
@@ -289,10 +208,10 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 100;
 			[UIView animateWithDuration:AGPhotoBrowserAnimationDuration
 							 animations:^(){
 								 self.backgroundColor = [UIColor colorWithWhite:0. alpha:1.];
-								 imageView.center = self->_startingPanPoint;
+								 imageView.center = self.startingPanPoint;
 							 } completion:^(BOOL finished){
 								 // -- show detailed view?
-								 self.displayingDetailedView = YES;
+                                 self.showCellDetail = YES;
 							 }];
 		} else {
 			// -- Animate out!
@@ -300,16 +219,16 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 100;
 			[self hideWithCompletion:^(BOOL finished){
 				typeof(weakSelf) strongSelf __strong = weakSelf;
 				if (strongSelf) {
-					imageView.center = strongSelf->_startingPanPoint;
+					imageView.center = self.startingPanPoint;
 				}
 			}];
 		}
 	} else {
 		CGPoint middlePanPoint = [recognizer translationInView:self];
-		CGPoint translatedPoint = CGPointMake(_startingPanPoint.x + middlePanPoint.x, _startingPanPoint.y);
+		CGPoint translatedPoint = CGPointMake(self.startingPanPoint.x + middlePanPoint.x, self.startingPanPoint.y);
 		imageView.center = translatedPoint;
-		int heightDifference = abs(floor(_startingPanPoint.x - translatedPoint.x));
-		CGFloat ratio = (_startingPanPoint.x - heightDifference)/_startingPanPoint.x;
+		int heightDifference = abs(floor(self.startingPanPoint.x - translatedPoint.x));
+		CGFloat ratio = (self.startingPanPoint.x - heightDifference)/self.startingPanPoint.x;
 		self.backgroundColor = [UIColor colorWithWhite:0. alpha:ratio];
 	}
 }
@@ -317,31 +236,19 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 100;
 
 #pragma mark - Setters
 
-- (void)setDisplayingDetailedView:(BOOL)displayingDetailedView
-{
-	_displayingDetailedView = displayingDetailedView;
-
-	CGFloat newAlpha;
-
-	if (_displayingDetailedView) {
-		[self.overlayView showOverlayAnimated:YES];
-		newAlpha = 1.;
-	} else {
-		[self.overlayView hideOverlayAnimated:YES];
-		newAlpha = 0.;
-	}
+- (void)setShowCellDetail:(BOOL)showCellDetail {
+	_showCellDetail = showCellDetail;
 
 	[UIView animateWithDuration:AGPhotoBrowserAnimationDuration
 					 animations:^(){
-						 self.doneButton.alpha = newAlpha;
+						 self.doneButton.alpha = _showCellDetail;
 					 }];
 }
 
 
 #pragma mark - Getters
 
-- (UIButton *)doneButton
-{
+- (UIButton *)doneButton {
 	if (!_doneButton) {
 		int currentScreenWidth = CGRectGetWidth([[UIScreen mainScreen] bounds]);
 		_doneButton = [[UIButton alloc] initWithFrame:CGRectMake(currentScreenWidth - 70, 12, 60, 32)];
@@ -357,8 +264,7 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 100;
 	return _doneButton;
 }
 
-- (UITableView *)photoTableView
-{
+- (UITableView *)photoTableView {
 	if (!_photoTableView) {
 		CGRect screenBounds = [[UIScreen mainScreen] bounds];
 		_photoTableView = [[UITableView alloc] initWithFrame:screenBounds];
@@ -376,23 +282,12 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 100;
 	return _photoTableView;
 }
 
-- (AGPhotoBrowserOverlayView *)overlayView
-{
-	if (!_overlayView) {
-		_overlayView = [[AGPhotoBrowserOverlayView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.frame) - AGPhotoBrowserOverlayInitialHeight, CGRectGetWidth(self.frame), AGPhotoBrowserOverlayInitialHeight)];
-		_overlayView.delegate = self;
-	}
-
-	return _overlayView;
-}
-
 
 #pragma mark - Private methods
 
-- (void)p_doneButtonTapped:(UIButton *)sender
-{
+- (void)p_doneButtonTapped:(UIButton *)sender {
 	if ([_delegate respondsToSelector:@selector(photoBrowser:didTapOnDoneButton:)]) {
-		self.displayingDetailedView = NO;
+        self.showCellDetail = NO;
 		[_delegate photoBrowser:self didTapOnDoneButton:sender];
 	}
 }
