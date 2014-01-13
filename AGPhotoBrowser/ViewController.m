@@ -38,24 +38,24 @@
 		  @"User" : @"Matt",
           @"DateTime" : @"Jan 1, 1990",
 		  @"Location" : @"",
-          @"Views" : @"10",
-          @"Reposts" : @"50"
+          @"Reposts" : @"10",
+          @"Views" : @"50"
 	},
 	  @{
 		  @"Image": SAMPLE_IMAGE_2,
 		  @"User" : @"Abram",
           @"DateTime" : @"May 22, 1987",
           @"Location" : @"San Francisco, CA",
-          @"Views" : @"40",
-          @"Reposts" : @"50"
+          @"Reposts" : @"40",
+          @"Views" : @"50"
 	},
 	  @{
 		  @"Image": SAMPLE_IMAGE_3,
 		  @"User" : @"Shri",
           @"DateTime" : @"May 22, 1990",
           @"Location" : @"San Francisco, CA",
-          @"Views" : @"1",
-          @"Reposts" : @"50"
+          @"Reposts" : @"1",
+          @"Views" : @"50"
 	},
 	];
 }

@@ -95,12 +95,13 @@
                          [self.userLabel setHidden:!isVisable];
                          [self.dateTimeLabel setHidden:!isVisable];
                          [self.locationLabel setHidden:!isVisable];
+                         [self.circleChart setHidden:!isVisable];
 					 }];
 }
 
 - (void)setViews:(NSInteger)views andReposts:(NSInteger)reposts {
-    [self.circleChart setCurrent:[NSNumber numberWithInt:views]];
-    [self.circleChart setTotal:[NSNumber numberWithInt:reposts]];
+    [self.circleChart setCurrent:[NSNumber numberWithInt:reposts]];
+    [self.circleChart setTotal:[NSNumber numberWithInt:views]];
     [self.circleChart strokeChart];
 }
 
