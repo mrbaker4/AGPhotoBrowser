@@ -15,5 +15,6 @@
 @property (strong) UILabel *locationLabel;
 
 - (void)setDetailsVisable:(BOOL)isVisable;
+- (void)setViews:(NSInteger)views andReposts:(NSInteger)reposts;
 
 @end

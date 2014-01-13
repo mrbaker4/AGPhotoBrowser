@@ -1,12 +1,15 @@
 PODS:
+  - PNChart (0.3.1)
   - SDWebImage (3.5.1):
     - SDWebImage/Core
   - SDWebImage/Core (3.5.1)
 
 DEPENDENCIES:
+  - PNChart (= 0.3.1)
   - SDWebImage (= 3.5.1)
 
 SPEC CHECKSUMS:
+  PNChart: 2538e83bfda6809f2c50e95151edbc86f8425879
   SDWebImage: a408b548a634b792372e07e753fc1079aff5032a
 
-COCOAPODS: 0.28.0
+COCOAPODS: 0.29.0

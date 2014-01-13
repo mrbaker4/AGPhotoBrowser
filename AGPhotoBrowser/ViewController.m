@@ -37,19 +37,25 @@
 		  @"Image": SAMPLE_IMAGE_1,
 		  @"User" : @"Matt",
           @"DateTime" : @"Jan 1, 1990",
-		  @"Location" : @""
+		  @"Location" : @"",
+          @"Views" : @"10",
+          @"Reposts" : @"50"
 	},
 	  @{
 		  @"Image": SAMPLE_IMAGE_2,
 		  @"User" : @"Abram",
           @"DateTime" : @"May 22, 1987",
-          @"Location" : @"San Francisco, CA"
+          @"Location" : @"San Francisco, CA",
+          @"Views" : @"40",
+          @"Reposts" : @"50"
 	},
 	  @{
 		  @"Image": SAMPLE_IMAGE_3,
 		  @"User" : @"Shri",
           @"DateTime" : @"May 22, 1990",
-          @"Location" : @"San Francisco, CA"
+          @"Location" : @"San Francisco, CA",
+          @"Views" : @"1",
+          @"Reposts" : @"50"
 	},
 	];
 }
@@ -148,6 +154,14 @@
 
 - (NSString *)photoBrowser:(AGPhotoBrowserView *)photoBrowser dateTimeForImageAtIndex:(NSInteger)index {
     return [[_samplePictures objectAtIndex:index] objectForKey:@"DateTime"];
+}
+
+- (NSInteger)photoBrowser:(AGPhotoBrowserView *)photoBrowser viewsForImageAtIndex:(NSInteger)index {
+    return [[[_samplePictures objectAtIndex:index] objectForKey:@"Views"] integerValue];
+}
+
+- (NSInteger)photoBrowser:(AGPhotoBrowserView *)photoBrowser repostsForImageAtIndex:(NSInteger)index {
+    return [[[_samplePictures objectAtIndex:index] objectForKey:@"Reposts"] integerValue];
 }
 
 - (BOOL)photoBrowser:(AGPhotoBrowserView *)photoBrowser willDisplayActionButtonAtIndex:(NSInteger)index
