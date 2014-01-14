@@ -100,7 +100,7 @@
 - (void)setViews:(NSInteger)views andReposts:(NSInteger)reposts {
     [self.circleChart setCount:[NSNumber numberWithInteger:reposts]];
     [self.circleChart setTotal:[NSNumber numberWithInteger:views]];
-    [self.circleChart setTitleCount:[NSString stringWithFormat:@"%d", reposts]];
+    [self.circleChart setTitleCount:[NSString stringWithFormat:@"%@", @(reposts)]];
     [self.circleChart strokeChart];
 }
 

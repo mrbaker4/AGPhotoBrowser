@@ -61,7 +61,7 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 100;
 	cell.backgroundColor = [UIColor clearColor];
 }
 
-- (float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return CGRectGetHeight([[UIScreen mainScreen] bounds]);
 }
 
