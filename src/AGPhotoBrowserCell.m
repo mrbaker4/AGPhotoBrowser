@@ -82,9 +82,7 @@
 }
 
 - (void) circleChartSetup {
-    self.circleChart = [[PNCircleChart alloc] initWithFrame:CGRectMake(10.0, 10.0, 75.0, 75.0) andTotal:[NSNumber numberWithInt:0] andCurrent:[NSNumber numberWithInt:0]];
-    self.circleChart.backgroundColor = [UIColor clearColor];
-    [self.circleChart setStrokeColor:PNGreen];
+    self.circleChart = [[PNCircleChart alloc] initWithFrame:CGRectMake(10.0, 10.0, 75.0, 75.0)];
 }
 
 #pragma mark - Cell Actions
@@ -100,8 +98,9 @@
 }
 
 - (void)setViews:(NSInteger)views andReposts:(NSInteger)reposts {
-    [self.circleChart setCurrent:[NSNumber numberWithInt:reposts]];
-    [self.circleChart setTotal:[NSNumber numberWithInt:views]];
+    [self.circleChart setCount:[NSNumber numberWithInteger:reposts]];
+    [self.circleChart setTotal:[NSNumber numberWithInteger:views]];
+    [self.circleChart setTitleCount:[NSString stringWithFormat:@"%dk", reposts]];
     [self.circleChart strokeChart];
 }
 
