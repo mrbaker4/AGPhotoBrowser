@@ -11,5 +11,4 @@ Pod::Spec.new do |s|
   s.source_files = 'src/*.{h,m}'
   s.requires_arc = true
   s.dependency 'SDWebImage'
-  s.dependency 'PNChart'
 end
