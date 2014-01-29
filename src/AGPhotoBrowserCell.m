@@ -8,10 +8,8 @@
 
 #import "AGPhotoBrowserCell.h"
 #import "AGPhotoBrowserConstants.h"
-#import <PNChart.h>
 
 @interface AGPhotoBrowserCell ()
-@property (strong) PNCircleChart *circleChart;
 @end
 
 @implementation AGPhotoBrowserCell
@@ -25,11 +23,9 @@
         [self userLabelSetup];
         [self dateTimeLabelSetup];
         [self locationLabelSetup];
-        [self circleChartSetup];
 
         [self moveLabelsToPosition];
 
-        [self addSubview:self.circleChart];
         [self addSubview:self.userLabel];
         [self addSubview:self.dateTimeLabel];
         [self addSubview:self.locationLabel];
@@ -81,10 +77,6 @@
     [self.locationLabel setShadowColor:[UIColor colorWithWhite:0.0 alpha:0.75]];
 }
 
-- (void) circleChartSetup {
-    self.circleChart = [[PNCircleChart alloc] initWithFrame:CGRectMake(10.0, 10.0, 75.0, 75.0)];
-}
-
 #pragma mark - Cell Actions
 
 - (void)setDetailsVisable:(BOOL)isVisable {
@@ -93,15 +85,7 @@
                          [self.userLabel setHidden:!isVisable];
                          [self.dateTimeLabel setHidden:!isVisable];
                          [self.locationLabel setHidden:!isVisable];
-                         [self.circleChart setHidden:!isVisable];
 					 }];
-}
-
-- (void)setViews:(NSInteger)views andReposts:(NSInteger)reposts {
-    [self.circleChart setCount:[NSNumber numberWithInteger:reposts]];
-    [self.circleChart setTotal:[NSNumber numberWithInteger:views]];
-    [self.circleChart setTitleCount:[NSString stringWithFormat:@"%@", @(reposts)]];
-    [self.circleChart strokeChart];
 }
 
 @end

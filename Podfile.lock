@@ -1,19 +1,12 @@
 PODS:
-  - PNChart (0.2.2)
   - SDWebImage (3.5.1):
     - SDWebImage/Core
   - SDWebImage/Core (3.5.1)
 
 DEPENDENCIES:
-  - PNChart (from `https://github.com/mrbaker4/PNChart`)
   - SDWebImage (= 3.5.1)
 
-EXTERNAL SOURCES:
-  PNChart:
-    :git: https://github.com/mrbaker4/PNChart
-
 SPEC CHECKSUMS:
-  PNChart: 55161d5bf01a4a8e5593e5c45b34af70eae7ed83
   SDWebImage: a408b548a634b792372e07e753fc1079aff5032a
 
 COCOAPODS: 0.29.0
