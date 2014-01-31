@@ -15,11 +15,12 @@
 - (NSString *)photoBrowser:(AGPhotoBrowserView *)photoBrowser userForImageAtIndex:(NSInteger)index;
 - (NSString *)photoBrowser:(AGPhotoBrowserView *)photoBrowser dateTimeForImageAtIndex:(NSInteger)index;
 - (NSString *)photoBrowser:(AGPhotoBrowserView *)photoBrowser locationForImageAtIndex:(NSInteger)index;
-- (NSInteger)photoBrowser:(AGPhotoBrowserView *)photoBrowser viewsForImageAtIndex:(NSInteger)index;
-
+- (NSString *)photoBrowser:(AGPhotoBrowserView *)photoBrowser captionForImageAtIndex:(NSInteger)index;
+- (CGFloat)photoBrowser:(AGPhotoBrowserView *)photoBrowser captionPositionForImageAtIndex:(NSInteger)index;
 
 @optional
 
+- (NSInteger)photoBrowser:(AGPhotoBrowserView *)photoBrowser viewsForImageAtIndex:(NSInteger)index;
 - (NSInteger)photoBrowser:(AGPhotoBrowserView *)photoBrowser repostsForImageAtIndex:(NSInteger)index;
 - (BOOL)photoBrowser:(AGPhotoBrowserView *)photoBrowser willDisplayActionButtonAtIndex:(NSInteger)index;
 
