@@ -105,6 +105,8 @@ const NSInteger AGPhotoBrowserThresholdToCenter = 100;
     [cell.userLabel setText:[_dataSource photoBrowser:self userForImageAtIndex:indexPath.row]];
     [cell.locationLabel setText:[_dataSource photoBrowser:self locationForImageAtIndex:indexPath.row]];
     [cell.dateTimeLabel setText:[_dataSource photoBrowser:self dateTimeForImageAtIndex:indexPath.row]];
+    [cell setCaption:[_dataSource photoBrowser:self captionForImageAtIndex:indexPath.row]
+        withPosition:[_dataSource photoBrowser:self captionPositionForImageAtIndex:indexPath.row]];
 }
 
 #pragma mark - UITableViewDelegate
