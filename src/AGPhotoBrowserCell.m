@@ -23,12 +23,14 @@
         [self userLabelSetup];
         [self dateTimeLabelSetup];
         [self locationLabelSetup];
+        [self captionLabelSetup];
 
         [self moveLabelsToPosition];
 
         [self addSubview:self.userLabel];
         [self addSubview:self.dateTimeLabel];
         [self addSubview:self.locationLabel];
+        [self addSubview:self.captionLabel];
     }
     return self;
 }

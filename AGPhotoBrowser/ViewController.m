@@ -40,7 +40,7 @@
 		  @"Location" : @"",
           @"Reposts" : @"999",
           @"Views" : @"10000",
-          @"Position" : @(0.0),
+          @"Position" : @(300.0),
           @"Caption" : @"Hello world!"
 	},
 	  @{
@@ -50,7 +50,7 @@
           @"Location" : @"San Francisco, CA",
           @"Reposts" : @"99",
           @"Views" : @"10000",
-          @"Position" : @(0.0),
+          @"Position" : @(100.0),
           @"Caption" : @"Hello world!"
 	},
 	  @{
@@ -60,7 +60,7 @@
           @"Location" : @"San Francisco, CA",
           @"Reposts" : @"1",
           @"Views" : @"5",
-          @"Position" : @(0.0),
+          @"Position" : @(50.0),
           @"Caption" : @"Hello world!"
 	},
 	];
