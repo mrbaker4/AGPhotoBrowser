@@ -77,6 +77,15 @@
     [self.locationLabel setShadowColor:[UIColor colorWithWhite:0.0 alpha:0.75]];
 }
 
+- (void) captionLabelSetup {
+    self.captionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 70.0)];
+    [self.captionLabel setTextAlignment:NSTextAlignmentLeft];
+    [self.captionLabel setTextColor:[UIColor colorWithWhite:1.000 alpha:0.920]];
+    [self.captionLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:58.0]];
+    [self.captionLabel setMinimumScaleFactor:24.0/58.0];
+    [self.captionLabel setAdjustsFontSizeToFitWidth:YES];
+}
+
 #pragma mark - Cell Actions
 
 - (void)setDetailsVisable:(BOOL)isVisable {
@@ -86,6 +95,11 @@
                          [self.dateTimeLabel setHidden:!isVisable];
                          [self.locationLabel setHidden:!isVisable];
 					 }];
+}
+
+- (void) setCaption:(NSString *)caption withPosition:(CGFloat)position {
+    [self.captionLabel setFrame:CGRectMake(0.0, position, 320.0, 70.0)];
+    [self.captionLabel setText:caption];
 }
 
 @end

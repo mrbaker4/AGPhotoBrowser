@@ -13,7 +13,9 @@
 @property (strong) UILabel *userLabel;
 @property (strong) UILabel *dateTimeLabel;
 @property (strong) UILabel *locationLabel;
+@property (strong) UILabel *captionLabel;
 
 - (void)setDetailsVisable:(BOOL)isVisable;
+- (void)setCaption:(NSString *)caption withPosition:(CGFloat)position;
 
 @end
